@@ -24,7 +24,7 @@ class Philosopher extends Thread {
                 // Философ ест
                 Thread.sleep(500);
                 mealCount++;
-
+                //ddd
                 System.out.println("Философ " + id + " выходит из-за стола");
                 semaphore.release();
 
