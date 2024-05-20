@@ -2,44 +2,37 @@ package org.example;
 
 import java.util.concurrent.Semaphore;
 
-// класс философа
-class Philosopher extends Thread
-{
-    Semaphore sem; // семафор. ограничивающий число философов
-    // кол-во приемов пищи
-    int num = 0;
-    // условный номер философа
-    int id;
-    // в качестве параметров конструктора передаем идентификатор философа и семафор
-    Philosopher(Semaphore sem, int id)
-    {
-        this.sem=sem;
-        this.id=id;
+// Класс философа
+class Philosopher extends Thread {
+    private final Semaphore semaphore; // Семафор, ограничивающий число философов
+    private int mealCount = 0; // Количество приемов пищи
+    private final int id; // Условный номер философа
+
+    // Конструктор с параметрами: семафор и идентификатор философа
+    Philosopher(Semaphore semaphore, int id) {
+        this.semaphore = semaphore;
+        this.id = id;
     }
 
-    public void run()
-    {
-        try
-        {
-            while(num<3)// пока количество приемов пищи не достигнет 3
-            {
-                //Запрашиваем у семафора разрешение на выполнение
-                sem.acquire();
-                System.out.println ("Философ " + id+" садится за стол");
-                // философ ест
-                sleep(500);
-                num++;
+    @Override
+    public void run() {
+        try {
+            while (mealCount < 1) { // Пока количество приемов пищи не достигнет 1
+                // Запрашиваем у семафора разрешение на выполнение
+                semaphore.acquire();
+                System.out.println("Философ " + id + " садится за стол");
+                // Философ ест
+                Thread.sleep(500);
+                mealCount++;
 
-                System.out.println ("Философ " + id+" выходит из-за стола");
-                sem.release();
+                System.out.println("Философ " + id + " выходит из-за стола");
+                semaphore.release();
 
-                // философ гуляет
-                sleep(500);
+                // Философ гуляет
+                Thread.sleep(700);
             }
-        }
-        catch(InterruptedException e)
-        {
-            System.out.println ("у философа " + id + " проблемы со здоровьем");
+        } catch (InterruptedException e) {
+            System.out.println("У философа " + id + " проблемы со здоровьем");
         }
     }
 }
